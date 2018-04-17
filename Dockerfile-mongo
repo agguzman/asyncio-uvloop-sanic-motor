@@ -1,0 +1,2 @@
+FROM mongo:3.6.3-jessie
+LABEL maintainer="a.guillermo.guzman@gmail.com"
