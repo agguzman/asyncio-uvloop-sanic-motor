@@ -1,18 +1,23 @@
-version: "3"
+version: "3.6"
 services:
+
   app:
     build:
-      dockerfile: Dockerfile-python
+      dockerfile: Dockerfile-dev
       context: .
     ports:
       - "8000:8000"
     env_file:
       - .env
-    command: bash -c "python app.py"
+    command: >
+      nodemon --watch /usr/src/app --exec python app.py
     links:
       - mongodb
     depends_on:
       - mongodb
+    volumes:
+      - "./:/usr/src/app"
+
   mongodb:
     build:
       dockerfile: Dockerfile-mongo
