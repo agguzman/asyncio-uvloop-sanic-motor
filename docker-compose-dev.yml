@@ -10,7 +10,7 @@ services:
     env_file:
       - .env
     command: >
-      nodemon --watch /usr/src/app --exec python app.py
+      nodemon --watch /usr/src/app/src --exec python src/app.py
     links:
       - mongodb
     depends_on:

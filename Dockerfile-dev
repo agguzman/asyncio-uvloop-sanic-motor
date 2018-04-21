@@ -5,14 +5,12 @@ ENV DEBIAN_FRONTEND noninteractive
 
 WORKDIR /usr/src/app
 
+# Install requirements for application runtime
 COPY requirements.txt ./
 RUN pip install --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
-#RUN apk update && apk add nodejs && npm i -g nodemon
-
-EXPOSE 8000:8000
-
+# Install node, npm, nodemon - nodemon watches app directory
 RUN apt-get update -y && \
     apt-get install -y curl vim && \
     curl -sL https://deb.nodesource.com/setup_9.x | bash && \
@@ -21,4 +19,6 @@ RUN apt-get update -y && \
     which npm && \
     npm install --global nodemon
 
-CMD [ "python", "./app.py" ]
+# Expose sanic server port
+EXPOSE 8000:8000
+CMD [ "python", "./src/app.py" ]
