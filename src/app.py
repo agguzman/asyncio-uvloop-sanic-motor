@@ -22,6 +22,8 @@ from sanic import Sanic
 from sanic.response import json, text
 from motor.motor_asyncio import AsyncIOMotorClient
 import uvloop
+from sanic_openapi import swagger_blueprint, openapi_blueprint
+from sanic_openapi import doc
 
 ###### Setup ######
 
@@ -31,6 +33,8 @@ asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 app = Sanic(__name__)
 db = None
 
+app.blueprint(openapi_blueprint)
+app.blueprint(swagger_blueprint)
 
 @app.listener('before_server_start')
 async def setup_db(app, loop):
@@ -45,9 +49,11 @@ async def setup_db(app, loop):
 async def list(request):
     host_name = socket.gethostname()
     host_ip = socket.gethostbyname(host_name)
-    return json({'Hostname': host_name, 'HostIP': host_ip})
+    return json({'Hostname': host_name, 'HostIP': host_ip, 'RequestHeaders': request.headers})
 
 @app.route("/users", methods=['GET'])
+@doc.summary('Fetches all users')
+@doc.produces({'name': str, 'id': str})
 async def list(request):
     data = await db['users'].find().to_list(20)
     for x in data:
